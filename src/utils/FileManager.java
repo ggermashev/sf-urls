@@ -68,6 +68,9 @@ public class FileManager {
         if (data instanceof Boolean) {
             return "<Boolean>" + data;
         }
+        if (data instanceof Long) {
+            return "<Long>" + data;
+        }
         return data.toString();
     }
 
@@ -154,6 +157,9 @@ public class FileManager {
         }
         if (data.startsWith("<Boolean>")) {
             return Boolean.parseBoolean(data.substring(9));
+        }
+        if (data.startsWith("<Long>")) {
+            return Long.parseLong(data.substring(6));
         }
         if (data.startsWith("<Model/")) {
             String constructorName = data.split("<Model/")[1].split(">")[0];
