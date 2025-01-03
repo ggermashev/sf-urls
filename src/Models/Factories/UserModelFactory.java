@@ -11,11 +11,9 @@ public class UserModelFactory implements Function {
     @Override
     public Object apply(Object o) {
         Map map = (HashMap) o;
-        String login = (String) map.get("login");
-        String password = (String) map.get("password");
         UUID id = UUID.fromString((String) map.get("id"));
 
-        var model = new UserModel(login, password);
+        var model = new UserModel();
         model.setId(id);
 
         return model;

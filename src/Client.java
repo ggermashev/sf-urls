@@ -51,23 +51,14 @@ public class Client {
     }
 
     private static void createAccountHandler() {
-        System.out.println("Для создания аккаунта ведите логин и пароль");
-        System.out.print("Ваш логин: ");
-        String login = scanner.next();
-        System.out.print("Ваш пароль: ");
-        String password = scanner.next();
-
-        Map params = new HashMap();
-        params.put("login", login);
-        params.put("password", password);
-        Boolean success = false;
+        String id = null;
         try {
-            success = (Boolean) server.call("/user/create", params);
+            id = (String) server.call("/user/create", null);
         } catch (Exception e) {
             System.out.println(e);
         } finally {
-            if (success) {
-                System.out.println("Аккаунт создан.");
+            if (id != null) {
+                System.out.println("Аккаунт создан. Ваш id: " + id);
             } else {
                 System.out.println("Не удалось создать аккаунт.");
             }
@@ -75,15 +66,12 @@ public class Client {
     }
 
     private static void loginHandler() {
-        System.out.println("Для входа в аккаунт ведите логин и пароль");
-        System.out.print("Ваш логин: ");
-        String login = scanner.next();
-        System.out.print("Ваш пароль: ");
-        String password = scanner.next();
+        System.out.println("Для входа в аккаунт ведите id");
+        System.out.print("Ваш id: ");
+        String id = scanner.next();
 
         Map params = new HashMap();
-        params.put("login", login);
-        params.put("password", password);
+        params.put("id", id);
         UUID token = null;
         try {
             token = (UUID) server.call("/user/login", params);

@@ -16,7 +16,7 @@ public class Router {
     public Object call(String route, Map params) throws InvalidParamsException, UnknownRouteException, UnauthorizedException, InvalidCredentialsException, EntityAlreadyExistsException {
         switch (route) {
             case "/user/create":
-                return userController.createAccount(params);
+                return userController.createAccount();
             case "/user/login":
                 return userController.login(params);
             case "/user/logout":

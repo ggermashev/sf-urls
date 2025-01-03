@@ -3,6 +3,7 @@ package Database;
 import Exceptions.EntityAlreadyExistsException;
 import Exceptions.EntityNotFoundException;
 import Exceptions.TableNotFoundException;
+import Models.Factories.UrlModelFactory;
 import Models.Factories.UserModelFactory;
 import Models.Model;
 import utils.FileManager;
@@ -19,6 +20,7 @@ public class Database implements AutoCloseable {
         tables = new HashMap<>();
 
         tables.put("User", new HashMap<>());
+        tables.put("Url", new HashMap<>());
 
         loadFromFile();
         withTablesStorage = true;
@@ -28,6 +30,7 @@ public class Database implements AutoCloseable {
         tables = new HashMap<>();
 
         tables.put("User", new HashMap<>());
+        tables.put("Url", new HashMap<>());
 
         this.withTablesStorage = withTablesStorage;
         if (withTablesStorage) {
@@ -83,6 +86,7 @@ public class Database implements AutoCloseable {
 
     private void loadToFile() throws TableNotFoundException, IOException {
         FileManager.loadTableToFile("User", tables.get("User"));
+        FileManager.loadTableToFile("Url", tables.get("Url"));
     }
 
     private void loadFromFile() {
@@ -91,9 +95,14 @@ public class Database implements AutoCloseable {
         var userModelFactory = new UserModelFactory();
         constructorsMap.put("UserModel", userModelFactory);
 
+        var urlModelFactory = new UrlModelFactory();
+        constructorsMap.put("UrlModel", urlModelFactory);
 
         try {
             tables.put("User", FileManager.loadTableFromFile("User", constructorsMap));
+        } catch (Exception e) {System.out.println(e);}
+        try {
+            tables.put("Url", FileManager.loadTableFromFile("Url", constructorsMap));
         } catch (Exception e) {System.out.println(e);}
     }
 

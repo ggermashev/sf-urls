@@ -44,14 +44,14 @@ public class RouterTester implements ITester {
         params.put("login", "login");
         params.put("password", "password");
         try {
-            router.call("unknown",params);
+            router.call("unknown", params);
 
-            System.out.println("Router test path not exists failed");
+            System.out.println("Router test path not exists failed!");
             return false;
         } catch (UnknownRouteException e) {
             return true;
         } catch (Exception e) {
-            System.out.println("Router test path not exists failed");
+            System.out.println("Router test path not exists failed: " + e);
             return false;
         }
     }
@@ -60,14 +60,14 @@ public class RouterTester implements ITester {
         Map params = new HashMap();
         params.put("login", "login");
         try {
-            router.call("/user/create",params);
+            router.call("/user/login",params);
 
-            System.out.println("Router test path not exists failed");
+            System.out.println("Router test wrong data failed");
             return false;
         } catch (InvalidParamsException e) {
             return true;
         } catch (Exception e) {
-            System.out.println("Router test path not exists failed");
+            System.out.println("Router test wrong data failed");
             return false;
         }
     }

@@ -48,6 +48,9 @@ public class FileManager {
             case "User":
                 path += "Users.txt";
                 break;
+            case "Url":
+                path += "Urls.txt";
+                break;
             default:
                 throw new TableNotFoundException();
         }

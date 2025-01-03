@@ -13,40 +13,27 @@ public class UserController extends Controller {
         super(database);
     }
 
-    public Boolean createAccount(Map params) throws InvalidParamsException, EntityAlreadyExistsException {
-        String login = (String) params.get("login");
-        String password = (String) params.get("password");
-
-        if (login == null || password == null) {
-            throw new InvalidParamsException();
-        }
-
-        UserModel user = new UserModel(login, password);
+    public String createAccount() throws EntityAlreadyExistsException {
+        UserModel user = new UserModel();
         try {
-            UserModel existingAccount = (UserModel) database.find(user.title, entity -> ((UserModel) entity).getLogin().equals(login));
-            if (existingAccount != null) {
-                throw new EntityAlreadyExistsException();
-            }
-
-            database.create(user.title, user);
-            return true;
+            user = (UserModel) database.create(user.title, user);
+            return user.getId();
         } catch (TableNotFoundException e) {
             System.out.println(e);
-            return false;
+            return null;
         }
     }
 
     public UUID login(Map params) throws InvalidParamsException, InvalidCredentialsException {
-        String login = (String) params.get("login");
-        String password = (String) params.get("password");
+        String id = (String) params.get("id");
 
-        if (login == null || password == null) {
+        if (id == null) {
             throw new InvalidParamsException();
         }
 
         UUID accessToken = UUID.randomUUID();
 
-        UserModel user = (UserModel) database.find("User", entity -> ((UserModel) entity).verify(login, password));
+        UserModel user = (UserModel) database.find("User", entity -> ((UserModel) entity).verify(id));
         if (user == null) {
             throw new InvalidCredentialsException();
         }

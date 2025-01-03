@@ -1,1 +1,1 @@
-<Map>80edb629-486f-4609-bd3d-cdaac9172f95:<Model/UserModel>id=80edb629-486f-4609-bd3d-cdaac9172f95;login=log;password=pw</Model/UserModel></Map>
+<Map>f7edf2b1-e3d4-4572-82c9-8de848a25736:<Model/UserModel>id=f7edf2b1-e3d4-4572-82c9-8de848a25736</Model/UserModel></Map>
