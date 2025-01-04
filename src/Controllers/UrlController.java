@@ -4,11 +4,13 @@ import Database.Database;
 import Exceptions.*;
 import Models.UrlModel;
 import Models.UserModel;
+import utils.FileManager;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.UUID;
+
 
 public class UrlController extends Controller {
 
@@ -20,6 +22,10 @@ public class UrlController extends Controller {
         String lifetime = (String) params.get("lifetime");
         Integer usagesLimit = (Integer) params.get("usagesLimit");
 
+        if (usagesLimit < 0) {
+            throw new InvalidParamsException();
+        }
+
         if (accessToken == null) {
             throw new UnauthorizedException();
         }
@@ -29,8 +35,31 @@ public class UrlController extends Controller {
         }
         String userId = user.getId();
 
+
         Long timestamp = stringToTimestamp(lifetime);
-        UrlModel urlModel = new UrlModel(userId, url, timestamp, usagesLimit);
+        Long resTimestamp = timestamp;
+        String envLifetime = FileManager.getEnv("MAX_URL_LIFETIME");
+        if (envLifetime != null) {
+            Long envTimestamp = stringToTimestamp(envLifetime);
+            resTimestamp = Math.min(timestamp, envTimestamp);
+            if (!resTimestamp.equals(timestamp)) {
+                System.out.println("Максимальное время жизни не может превышать " + envLifetime + ". Установлено максимальное значение.");
+            }
+        }
+
+        String envUsagesLimitStr = FileManager.getEnv("MIN_USAGES_LIMIT");
+        Integer resUsagesLimit = usagesLimit;
+        if (envUsagesLimitStr != null) {
+            Integer envUsagesLimit = Integer.parseInt(envUsagesLimitStr);
+            if (usagesLimit > 0) {
+                resUsagesLimit = Math.max(usagesLimit, envUsagesLimit);
+                if (!resUsagesLimit.equals(usagesLimit)) {
+                    System.out.println("Лимит переходов по ссылке не может быть менее " + envUsagesLimitStr + ". Установлено минимальное значение.");
+                }
+            }
+        }
+
+        UrlModel urlModel = new UrlModel(userId, url, resTimestamp, resUsagesLimit);
 
         try {
             database.create(urlModel.title, urlModel);

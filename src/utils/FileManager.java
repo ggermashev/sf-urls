@@ -8,7 +8,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class FileManager {
-
     public static void loadTableToFile(String table, Map params) throws TableNotFoundException, IOException {
         String path = FileManager.getPath(table);
 
@@ -40,6 +39,28 @@ public class FileManager {
         } else {
             return new HashMap();
         }
+    }
+
+    public static String getEnv(String name) {
+        Map<String, String> env = new HashMap();
+        try {
+            FileReader fileReader = new FileReader("src/.env");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] entry = line.split("=");
+                if (entry.length != 2) { continue; }
+
+                String key = entry[0];
+                String value = entry[1];
+                env.put(key, value);
+            }
+            bufferedReader.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return env.get(name);
     }
 
     private static String getPath(String table) throws TableNotFoundException {

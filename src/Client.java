@@ -21,36 +21,42 @@ public class Client {
 
                 System.out.println();
 
-                switch (choice) {
-                    case 1:
-                        createAccountHandler();
-                        break;
-                    case 2:
-                        loginHandler();
-                        break;
-                    case 3:
-                        logoutHandler();
-                        break;
-                    case 4:
-                        createShortUrlHandler();
-                        break;
-                    case 5:
-                        navigateShortUrlHandler();
-                        break;
-                    case 6:
-                        editShortUrlHandler();
-                        break;
-                    case 7:
-                        removeShortUrlHandler();
-                        break;
-                    case 0:
-                        return;
-                    default:
-                        System.out.println("Введен некорректный пункт меню");
-                        break;
+                try {
+                    switch (choice) {
+                        case 1:
+
+                            createAccountHandler();
+                            break;
+                        case 2:
+                            loginHandler();
+                            break;
+                        case 3:
+                            logoutHandler();
+                            break;
+                        case 4:
+                            createShortUrlHandler();
+                            break;
+                        case 5:
+                            navigateShortUrlHandler();
+                            break;
+                        case 6:
+                            editShortUrlHandler();
+                            break;
+                        case 7:
+                            removeShortUrlHandler();
+                            break;
+                        case 0:
+                            return;
+                        default:
+                            System.out.println("\nВведен некорректный пункт меню");
+                            break;
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
                 }
+
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {System.out.println(e);}
     }
 
     private static void printMenu() {
@@ -74,9 +80,9 @@ public class Client {
             System.out.println(e);
         } finally {
             if (id != null) {
-                System.out.println("Аккаунт создан. Ваш id: " + id);
+                System.out.println("\nАккаунт создан. Ваш id: " + id);
             } else {
-                System.out.println("Не удалось создать аккаунт.");
+                System.out.println("\nНе удалось создать аккаунт.");
             }
         }
     }
@@ -96,9 +102,9 @@ public class Client {
         } finally {
             if (token != null) {
                 accessToken = token;
-                System.out.println("Вы вошли в аккаунт.");
+                System.out.println("\nВы вошли в аккаунт.");
             } else {
-                System.out.println("Не удалось войти в аккаунт.");
+                System.out.println("\nНе удалось войти в аккаунт.");
             }
         }
     }
@@ -114,14 +120,17 @@ public class Client {
         } finally {
             if (success) {
                 accessToken = null;
-                System.out.println("Вы вышли из аккаунта.");
+                System.out.println("\nВы вышли из аккаунта.");
             } else {
-                System.out.println("Не удалось выйти из аккаунта");
+                System.out.println("\nНе удалось выйти из аккаунта");
             }
         }
     }
 
     private static void createShortUrlHandler() {
+        Scanner scanner = new Scanner(System.in);
+        scanner.useDelimiter("\n");
+
         System.out.println("Для создания короткой ссылки следуйте инструкциям");
         System.out.print("Url для сокращения: ");
         String url = scanner.next();
@@ -148,9 +157,9 @@ public class Client {
             System.out.println(e);
         } finally {
             if (shortUrl != null) {
-                System.out.println("Короткая ссылка для " + url + " создана: " + shortUrl);
+                System.out.println("\nКороткая ссылка для " + url + " создана: " + shortUrl);
             } else {
-                System.out.println("Не удалось создать короткую ссылку.");
+                System.out.println("\nНе удалось создать короткую ссылку.");
             }
         }
     }
@@ -171,14 +180,17 @@ public class Client {
             System.out.println(e);
         } finally {
             if (!success) {
-                System.out.println("Не удалось воспользоваться короткой ссылкой.");
+                System.out.println("\nНе удалось воспользоваться короткой ссылкой.");
             } else {
-                System.out.println("Вы перешли по ссылке.");
+                System.out.println("\nВы перешли по ссылке.");
             }
         }
     }
 
     private static void editShortUrlHandler() {
+        Scanner scanner = new Scanner(System.in);
+        scanner.useDelimiter("\n");
+
         System.out.println("Введите короткую ссылку и ее новые параметры.");
         System.out.print("url: ");
         String shortUrl = scanner.next();
@@ -217,9 +229,9 @@ public class Client {
             System.out.println(e);
         } finally {
             if (success) {
-                System.out.println("Ссылка успешно обновлена");
+                System.out.println("\nСсылка успешно обновлена");
             } else {
-                System.out.println("не удалось обновить ссылку");
+                System.out.println("\nНе удалось обновить ссылку");
             }
         }
 
@@ -241,9 +253,9 @@ public class Client {
             System.out.println(e);
         } finally {
             if (success) {
-                System.out.println("Ссылка удалена");
+                System.out.println("\nСсылка удалена");
             } else {
-                System.out.println("Не удалось удалить ссылку");
+                System.out.println("\nНе удалось удалить ссылку");
             }
         }
     }
