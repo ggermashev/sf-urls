@@ -20,7 +20,10 @@ public class UrlController extends Controller {
         String lifetime = (String) params.get("lifetime");
         Integer usagesLimit = (Integer) params.get("usagesLimit");
 
-        UserModel user = (UserModel) database.find("User", entity -> ((UserModel) entity).accessToken.equals(accessToken));
+        if (accessToken == null) {
+            throw new UnauthorizedException();
+        }
+        UserModel user = (UserModel) database.find("User", entity -> accessToken.equals(((UserModel) entity).accessToken));
         if (user == null) {
             throw new UnauthorizedException();
         }
@@ -39,17 +42,24 @@ public class UrlController extends Controller {
         return urlModel.getShortUrl();
     }
 
-    public void navigateUrl(Map params) throws UnauthorizedException, IOException, LinkLifetimeExpiredException, LinkUsageLimitExceededException {
+    public Boolean navigateUrl(Map params) throws UnauthorizedException, IOException, LinkLifetimeExpiredException, LinkUsageLimitExceededException, EntityNotFoundException {
         UUID accessToken = (UUID) params.get("accessToken");
         String shortUrl = (String) params.get("shortUrl");
         Boolean mock = (Boolean) params.get("mock");
 
-        UserModel user = (UserModel) database.find("User", entity -> ((UserModel) entity).accessToken.equals(accessToken));
+        if (accessToken == null) {
+            throw new UnauthorizedException();
+        }
+        UserModel user = (UserModel) database.find("User", entity -> accessToken.equals(((UserModel) entity).accessToken));
         if (user == null) {
             throw new UnauthorizedException();
         }
 
         UrlModel urlModel = (UrlModel) database.find("Url", entity -> ((UrlModel) entity).getShortUrl().equals(shortUrl));
+        if (urlModel == null) {
+            throw new EntityNotFoundException();
+        }
+
         try {
             urlModel.navigate(mock);
             database.update(urlModel.title, urlModel);
@@ -63,6 +73,69 @@ public class UrlController extends Controller {
         } catch (EntityNotFoundException e) {
             throw new RuntimeException(e);
         }
+
+        return true;
+    }
+
+    public Boolean removeUrl(Map params) throws UnauthorizedException, NotLinkOwnerException {
+        UUID accessToken = (UUID) params.get("accessToken");
+        String shortUrl = (String) params.get("shortUrl");
+
+        if (accessToken == null) {
+            throw new UnauthorizedException();
+        }
+        UserModel user = (UserModel) database.find("User", entity -> accessToken.equals(((UserModel) entity).accessToken));
+        if (user == null) {
+            throw new UnauthorizedException();
+        }
+
+        UrlModel urlModel = (UrlModel) database.find("Url", entity -> ((UrlModel) entity).getShortUrl().equals(shortUrl));
+        if (!urlModel.checkOwner(user.getId())) {
+            throw new NotLinkOwnerException();
+        }
+
+        try {
+            database.delete(urlModel.title, urlModel.getId());
+        } catch (TableNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
+    }
+
+    public Boolean editUrl(Map params) throws UnauthorizedException, NotLinkOwnerException, InvalidParamsException {
+        UUID accessToken = (UUID) params.get("accessToken");
+        String shortUrl = (String) params.get("shortUrl");
+        String lifetime = (String) params.get("lifetime");
+        Integer usagesLimit = (Integer) params.get("usagesLimit");
+
+        if (accessToken == null) {
+            throw new UnauthorizedException();
+        }
+        UserModel user = (UserModel) database.find("User", entity -> accessToken.equals(((UserModel) entity).accessToken));
+        if (user == null) {
+            throw new UnauthorizedException();
+        }
+
+        UrlModel urlModel = (UrlModel) database.find("Url", entity -> ((UrlModel) entity).getShortUrl().equals(shortUrl));
+        if (!urlModel.checkOwner(user.getId())) {
+            throw new NotLinkOwnerException();
+        }
+
+        if (lifetime != null) {
+            urlModel.setLifetime(stringToTimestamp(lifetime));
+        }
+        if (usagesLimit != null) {
+            urlModel.setUsagesLimit(usagesLimit);
+        }
+
+        try {
+            database.update(urlModel.title, urlModel);
+        } catch (TableNotFoundException | EntityNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 
     private Long stringToTimestamp(String time) throws InvalidParamsException {

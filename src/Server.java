@@ -2,6 +2,8 @@ import Database.Database;
 import Exceptions.*;
 import Router.Router;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 public class Server implements AutoCloseable{
@@ -13,7 +15,7 @@ public class Server implements AutoCloseable{
         router = new Router(db);
     }
 
-    public Object call(String route, Map params) throws InvalidCredentialsException, UnauthorizedException, InvalidParamsException, UnknownRouteException, EntityAlreadyExistsException {
+    public Object call(String route, Map params) throws InvalidCredentialsException, UnauthorizedException, InvalidParamsException, UnknownRouteException, EntityAlreadyExistsException, NotLinkOwnerException, URISyntaxException, IOException, EntityNotFoundException, LinkLifetimeExpiredException, LinkUsageLimitExceededException {
         return router.call(route, params);
     }
 

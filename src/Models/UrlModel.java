@@ -35,6 +35,9 @@ public class UrlModel extends Model {
     }
 
     public UrlModel(UUID userId, String url, long lifetime, int usagesLimit, String shortUrl, long createdAt, int usages) throws URISyntaxException {
+        super();
+        title = "Url";
+
         this.originalUrl = new URI(url);
         this.shortUrl = shortUrl;
         this.createdAt = createdAt;
@@ -48,16 +51,26 @@ public class UrlModel extends Model {
         return this.shortUrl;
     }
 
-    public void navigate(boolean mock) throws IOException, LinkLifetimeExpiredException, LinkUsageLimitExceededException {
+    public void setLifetime(long lifetime) {
+        this.lifetime = lifetime;
+        this.createdAt = Timestamp.from(Instant.now()).getTime();
+    }
+
+    public void setUsagesLimit(int usagesLimit) {
+        this.usagesLimit = usagesLimit;
+        this.usages = 0;
+    }
+
+    public void navigate(Boolean mock) throws IOException, LinkLifetimeExpiredException, LinkUsageLimitExceededException {
         long now = Timestamp.from(Instant.now()).getTime();
         if (now - createdAt > lifetime) {
             throw new LinkLifetimeExpiredException();
         }
-        if (usages >= usagesLimit) {
+        if (usagesLimit > 0 && usages >= usagesLimit) {
             throw new LinkUsageLimitExceededException();
         }
 
-        if (!mock) {
+        if (mock == null || !mock) {
             Desktop.getDesktop().browse(originalUrl);
         }
         usages++;
@@ -65,6 +78,10 @@ public class UrlModel extends Model {
 
     public void navigate() throws IOException, LinkLifetimeExpiredException, LinkUsageLimitExceededException {
         this.navigate(false);
+    }
+
+    public boolean checkOwner(String userId) {
+        return this.userId.toString().equals(userId);
     }
 
     @Override

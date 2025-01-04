@@ -4,6 +4,6 @@ public class InvalidParamsException extends Exception{
 
     @Override
     public String toString() {
-        return "Переданы неверные параметры";
+        return "Переданы некорректные параметры";
     }
 }

@@ -52,7 +52,10 @@ public class UserController extends Controller {
     public Boolean logout(Map params) throws UnauthorizedException {
         UUID accessToken = (UUID) params.get("accessToken");
 
-        UserModel user = (UserModel) database.find("User", entity -> ((UserModel) entity).accessToken.equals(accessToken));
+        if (accessToken == null) {
+            throw new UnauthorizedException();
+        }
+        UserModel user = (UserModel) database.find("User", entity -> accessToken.equals(((UserModel) entity).accessToken));
         if (user == null) {
             throw new UnauthorizedException();
         }

@@ -2,7 +2,21 @@
 
 ## Как пользоваться сервисом
 
+При запуске приложения в терминале появляется меню. 
+При выборе пункта меню в терминале выводится дополнительная 
+информация, какие данные необходимо ввести пользователю и
+в каком формате.
+
 ## Какие команды поддерживаются
+
+- Создать аккаунт 
+- Войти в аккаунт 
+- Выйти из аккаунта 
+- Создать короткую ссылку 
+- Перейти по короткой ссылке 
+- Редактировать параметры короткой ссылки 
+- Удалить короткую ссылку 
+- Выход из приложения
 
 ## Как протестировать код
 
@@ -20,21 +34,24 @@
 ### Уникальные ссылки для каждого пользователя
 
 Всегда, при любых условиях, генерируется уникальная ссылка.
-Реализовано в [UrlController](./src/Controllers/UrlController.java)
-Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java)
+Реализовано в [UrlModel](./src/Models/UrlModel.java).
+
+Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java).
 
 ### Лимит переходов
 
 При создании короткой ссылки передается лимит переходов по ней.
-Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java)
-Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java)
+Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java).
+
+Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java).
 
 ### Ограничение времени жизни ссылки
 
 При создании короткой ссылки сохраняется время ее инициализации.
 При использовании короткой ссылки проверяется время, которое прошло с момента ее инициализации.
-Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java)
-Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java)
+Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java).
+
+Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java).
 
 ### Уведомление пользователя, если ссылка больше не действительна
 
@@ -55,19 +72,21 @@
 При соответствующем запросе происходит генерация короткой ссылки и ее сохранение в БД
 в виде сущности [UrlModel](./src/Models/UrlModel.java).
 
-Логика создания короткой ссылки находится в [UrlController](./src/Controllers/UrlController.java)
+Логика создания короткой ссылки находится в [UrlController](./src/Controllers/UrlController.java).
 
 ### Лимит переходов
 
 При создании короткой ссылки передается лимит переходов по ней.
-Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java)
+Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java).
+
 Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java)
 
 ### Время жизни ссылки
 
 При создании короткой ссылки сохраняется время ее инициализации.
 При использовании короткой ссылки проверяется время, которое прошло с момента ее инициализации.
-Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java)
+Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java).
+
 Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java)
 
 ### Идентификация пользователя
@@ -91,6 +110,9 @@
 - Удаление ссылок по истечении срока жизни
 - Получение уведомления в случае недоступности ссылки
 - Валидация параметров ссылки
+- Удаление ссылки
+- Редактирование ссылки
+- Проверка наличия прав для работы со ссылкой
 
 Перечисленные выше тесткейсы можно посмотреть [здесь](./src/Controllers/ControllerTester.java)
 
@@ -106,25 +128,28 @@
 
 При создании короткой ссылки сохраняется время ее инициализации.
 При использовании короткой ссылки проверяется время, которое прошло с момента ее инициализации.
-Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java)
+Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java).
+
 Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java)
 
 ### Автоматическое удаление ссылок
 
 В случае, если время работы ссылки истекло, в результате обращения к ней она будет удалена.
-Реализация находится в [UrlController](./src/Controllers/UrlController.java)
+Реализация находится в [UrlController](./src/Controllers/UrlController.java).
 
 ### Уникальность ссылки
 
 Всегда, при любых условиях, генерируется уникальная ссылка.
-Реализовано в [UrlController](./src/Controllers/UrlController.java)
-Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java)
+Реализовано в [UrlModel](./src/Models/UrlModel.java).
+
+Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java).
 
 ### Повторное создание ссылок
 
 Всегда, при любых условиях, генерируется уникальная ссылка.
-Реализовано в [UrlController](./src/Controllers/UrlController.java)
-Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java)
+Реализовано в [UrlModel](./src/Models/UrlModel.java).
+
+Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java).
 
 ### Переход по ссылке
 
@@ -137,17 +162,28 @@
 ### Лимит переходов
 
 При создании короткой ссылки передается лимит переходов по ней.
-Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java)
+Реализацию можно посмотреть в [UrlModel](./src/Models/UrlModel.java).
+
 Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java)
 
 ### Уведомление пользователя
 
 При возникновении ошибок пользователь уведомляется в результате
-выброса соответствующих [исключений](./src/Exceptions)
+выброса соответствующих [исключений](./src/Exceptions).
 
 ### Редактирование лимита переходов
 
+Редактирование параметров ссылки реализовано в [UrlController](./src/Controllers/UrlController.java).
+Также при редактировании проверяется, что текущий пользователь является владельцем ссылки.
+
+Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java).
+
 ### Удаление ссылки
+
+Удаление ссылки реализовано в [UrlController](./src/Controllers/UrlController.java).
+Также при удалении проверяется, что текущий пользователь является владельцем ссылки.
+
+Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java).
 
 ### Идентификация по UUID
 
@@ -155,13 +191,26 @@
 свой уникальный UUID. Далее, используя полученный UUID, пользователь
 может идентифицироваться.
 
+Реализацию работы с пользователями можно посмотреть в [UserModel](./src/Models/UserModel.java) и
+[UserController](./src/Controllers/UserController.java).
+
 ### Работа нескольких пользователей
 
 Предусмотрен функционал создания аккаунта, в результате чего пользователь получает
 свой уникальный UUID. Далее, используя полученный UUID, пользователь
 может идентифицироваться.
 
+Реализацию работы с пользователями можно посмотреть в [UserModel](./src/Models/UserModel.java) и [UserController](./src/Controllers/UserController.java).
+
 ### Администрирование параметров ссылки
+
+Проверка на то, что только создатель ссылки может редактировать ее параметры и удалять ее
+реализована в соответствующих методах [UrlController](./src/Controllers/UrlController.java).
+
+Если текущий пользователь не является владельцем ссылки - выбрасывается исключение
+[NotLinkOwnerException](./src/Exceptions/NotLinkOwnerException.java).
+
+Тесткейс можно найти в [ControllerTester](./src/Controllers/ControllerTester.java).
 
 ### Создание нескольких ссылок
 

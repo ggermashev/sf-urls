@@ -41,6 +41,9 @@ public class ControllerTester implements ITester {
         good &= testUrlLimitExceeded();
         good &= testUrlLifetimeExpired();
         good &= testUrlInvalidLifetime();
+        good &= testRemoveUrl();
+        good &= testEditUrl();
+        good &= testNotUrlOwner();
 
         System.out.println(good ? "UrlController tests passed" : "UrlController tests failed");
     }
@@ -278,6 +281,98 @@ public class ControllerTester implements ITester {
             return true;
         } catch (Exception e) {
             System.out.println("Test url invalid lifetime failed: " + e);
+            return false;
+        }
+    }
+
+    private boolean testRemoveUrl() {
+        beforeTest();
+        Map params = new HashMap();
+        params.put("mock", true);
+
+        try {
+            String id = userController.createAccount();
+            params.put("id", id);
+            UUID accessToken = userController.login(params);
+            params.put("accessToken", accessToken);
+            params.put("url", "http://localhost");
+            params.put("lifetime", "1d");
+            params.put("usagesLimit", 1);
+
+            String shortUrl = urlController.createShortUrl(params);
+            params.put("shortUrl", shortUrl);
+
+            urlController.removeUrl(params);
+
+            urlController.navigateUrl(params);
+            System.out.println("test remove url failed!");
+            return false;
+        } catch (EntityNotFoundException e) {
+          return true;
+        } catch (Exception e) {
+            System.out.println("test remove url failed: " + e);
+            return false;
+        }
+    }
+
+    private boolean testEditUrl() {
+        beforeTest();
+        Map params = new HashMap();
+        params.put("mock", true);
+
+        try {
+            String id = userController.createAccount();
+            params.put("id", id);
+            UUID accessToken = userController.login(params);
+            params.put("accessToken", accessToken);
+            params.put("url", "http://localhost");
+            params.put("lifetime", "-1s");
+            params.put("usagesLimit", 1);
+
+            String shortUrl = urlController.createShortUrl(params);
+            params.put("shortUrl", shortUrl);
+
+            params.put("lifetime", "1d");
+            urlController.editUrl(params);
+            urlController.navigateUrl(params);
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("test edit url failed: " + e);
+            return false;
+        }
+    }
+
+    private boolean testNotUrlOwner() {
+        beforeTest();
+        Map params = new HashMap();
+        params.put("mock", true);
+
+        try {
+            String id = userController.createAccount();
+            params.put("id", id);
+            UUID accessToken = userController.login(params);
+            params.put("accessToken", accessToken);
+            params.put("url", "http://localhost");
+            params.put("lifetime", "1d");
+            params.put("usagesLimit", 1);
+
+            String shortUrl = urlController.createShortUrl(params);
+            params.put("shortUrl", shortUrl);
+
+            String id2 = userController.createAccount();
+            params.put("id", id2);
+            accessToken = userController.login(params);
+            params.put("accessToken", accessToken);
+
+            urlController.removeUrl(params);
+
+            System.out.println("test not url owner failed!");
+            return false;
+        } catch (NotLinkOwnerException e) {
+            return true;
+        } catch (Exception e) {
+            System.out.println("Test not url owner failed: " + e);
             return false;
         }
     }
