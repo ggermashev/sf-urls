@@ -17,6 +17,7 @@ public class FileManager {
         bufferedWriter.write(data);
 
         bufferedWriter.close();
+        fileWriter.close();
     }
 
     public static Map loadTableFromFile(String table, Map<String, Function<Map, Object>> constructorsMap) throws TableNotFoundException, IOException {
@@ -30,7 +31,9 @@ public class FileManager {
         while ((line = bufferedReader.readLine()) != null) {
             params = params.concat(line);
         }
+
         bufferedReader.close();
+        fileReader.close();
 
         Object parsed = recursiveParse(params, constructorsMap);
 
@@ -56,6 +59,7 @@ public class FileManager {
                 env.put(key, value);
             }
             bufferedReader.close();
+            fileReader.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
